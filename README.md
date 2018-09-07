@@ -43,6 +43,30 @@ instead of any string value.
 
 ## Reference
 
+- `datetime_action(fmt='%Y-%m-%dT%H:%M:%S')`
+
+  Maps command-line arguments in the given format to `datetime` objects.
+  Only accepts valid date-times in that format.
+
+  eg. An action of `datetime_action()` would map a command-line argument of
+  `2000-01-01T00:00:00` to the Python object `datetime.datetime(2000, 1, 1, 0, 0)`.
+
+- `date_action(fmt='%Y-%m-%d')`
+
+  Maps command-line arguments in the given format to `date` objects.
+  Only accepts valid dates in that format.
+
+  eg. An action of `date_action()` would map a command-line argument of
+  `2000-01-01` to the Python object `datetime.date(2000, 1, 1)`.
+
+- `time_action(fmt='%H:%M:%S')`
+
+  Maps command-line arguments in the given format to `time` objects.
+  Only accepts valid times in that format.
+
+  eg. An action of `time_action()` would map a command-line argument of
+  `00:00:00` to the Python object `datetime.time(0, 0)`.
+
 - `mapping_action(possible_values)`
 
   Takes a dictionary whose keys are the allowed values,
