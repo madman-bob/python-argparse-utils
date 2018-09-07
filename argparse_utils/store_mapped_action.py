@@ -1,7 +1,31 @@
 from abc import ABCMeta
 from argparse import Action
 
-__all__ = ["StoreMappedAction"]
+__all__ = ["StoreMappedAction", "Choice"]
+
+
+class Choice:
+    """
+    Wrapper class for Action choices
+
+    Allows you to override the display name for a given Python object
+    """
+
+    def __init__(self, value, name=None):
+        if name is None:
+            name = str(value)
+
+        self.name = name
+        self.value = value
+
+    def __eq__(self, other):
+        return self.value == other
+
+    def __hash__(self):
+        return hash(self.value)
+
+    def __str__(self):
+        return self.name
 
 
 class StoreMappedAction(Action, metaclass=ABCMeta):
@@ -18,6 +42,9 @@ class StoreMappedAction(Action, metaclass=ABCMeta):
         help=None,
         metavar=None
     ):
+
+        if type is None:
+            type = lambda value: self.mapping_function(value)
 
         if choices is None:
             choices = self.default_choices()
@@ -43,9 +70,4 @@ class StoreMappedAction(Action, metaclass=ABCMeta):
         return value
 
     def __call__(self, parser, namespace, values, option_string=None):
-        if isinstance(values, list):
-            values = [self.mapping_function(value) for value in values]
-        else:
-            values = self.mapping_function(values)
-
         setattr(namespace, self.dest, values)
