@@ -3,7 +3,7 @@ from datetime import datetime
 
 from argparse_utils.store_mapped_action import StoreMappedAction
 
-__all__ = ["datetime_action", "date_action", "time_action"]
+__all__ = ["datetime_action", "date_action", "time_action", "timedelta_action"]
 
 
 def datetime_action(fmt='%Y-%m-%dT%H:%M:%S'):
@@ -37,3 +37,16 @@ def time_action(fmt='%H:%M:%S'):
                 raise ArgumentTypeError("invalid time: '{}' (accepted format: {})".format(value, fmt))
 
     return StoreTimeAction
+
+
+def timedelta_action(fmt='%H:%M:%S'):
+    class StoreTimeDeltaAction(StoreMappedAction):
+        def mapping_function(self, value):
+            start_datetime = datetime(1899, 12, 31) if '%d' in fmt or '%j' in fmt else datetime(1900, 1, 1)
+
+            try:
+                return datetime.strptime(value, fmt) - start_datetime
+            except ValueError:
+                raise ArgumentTypeError("invalid timedelta: '{}' (accepted format: {})".format(value, fmt))
+
+    return StoreTimeDeltaAction

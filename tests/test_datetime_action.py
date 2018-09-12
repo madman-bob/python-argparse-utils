@@ -1,10 +1,10 @@
 from argparse import ArgumentParser
 from contextlib import redirect_stderr
-from datetime import date, time, datetime
+from datetime import date, time, datetime, timedelta
 from io import StringIO
 from unittest import TestCase
 
-from argparse_utils import datetime_action, date_action, time_action
+from argparse_utils import datetime_action, date_action, time_action, timedelta_action
 
 
 class TestDatetimeAction(TestCase):
@@ -109,3 +109,44 @@ class TestDatetimeAction(TestCase):
                     parser.parse_args(['-a', invalid_time])
 
                 self.assertRegex(error_message.getvalue(), "invalid time: '{}'".format(invalid_time))
+
+    def test_basic_timedelta_action(self):
+        parser = ArgumentParser()
+        parser.add_argument('-a', action=timedelta_action())
+
+        args = parser.parse_args('-a 04:05:06'.split())
+        self.assertEqual(args.a, timedelta(hours=4, minutes=5, seconds=6))
+
+    def test_timedelta_action_formats(self):
+        tests = [
+            ('%H', '1', timedelta(hours=1)),
+            ('%M', '1', timedelta(minutes=1)),
+            ('%S', '1', timedelta(seconds=1)),
+            ('%d', '1', timedelta(days=1)),
+            ('%j', '100', timedelta(days=100)),
+            ('%S %H %M', '6 4 5', timedelta(hours=4, minutes=5, seconds=6)),
+            ('%S %H %d %M', '6 4 3 5', timedelta(days=3, hours=4, minutes=5, seconds=6)),
+        ]
+
+        for fmt, arg, result in tests:
+            with self.subTest(fmt=fmt):
+                parser = ArgumentParser()
+                parser.add_argument('-a', action=timedelta_action(fmt))
+
+                args = parser.parse_args(['-a', arg])
+                self.assertEqual(args.a, result)
+
+    def test_invalid_timedelta(self):
+        invalid_timedeltas = ['timedelta', 'not:a:timedelta', 'still not a timedelta', '2001-02-03', '04:05:60']
+
+        parser = ArgumentParser()
+        parser.add_argument('-a', action=timedelta_action())
+
+        for invalid_timedelta in invalid_timedeltas:
+            with self.subTest(invalid_time=invalid_timedelta):
+                error_message = StringIO()
+
+                with redirect_stderr(error_message), self.assertRaises(SystemExit):
+                    parser.parse_args(['-a', invalid_timedelta])
+
+                self.assertRegex(error_message.getvalue(), "invalid timedelta: '{}'".format(invalid_timedelta))

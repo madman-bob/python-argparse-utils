@@ -67,6 +67,16 @@ instead of any string value.
   eg. An action of `time_action()` would map a command-line argument of
   `00:00:00` to the Python object `datetime.time(0, 0)`.
 
+- `timedelta_action(fmt='%H:%M:%S')`
+
+  Maps command-line arguments in the given format to `timedelta` objects.
+  Only accepts valid time-deltas in that format.
+
+  Note: As this uses a `timedelta` object, this may behave in unexpected ways when attempting to use months or years.
+
+  eg. An action of `timedelta_action()` would map a command-line argument of
+  `01:00:00` to the Python object `datetime.timedelta(0, 3600))`.
+
 - `mapping_action(possible_values)`
 
   Takes a dictionary whose keys are the allowed values,
