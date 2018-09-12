@@ -77,6 +77,15 @@ instead of any string value.
   eg. An action of `timedelta_action()` would map a command-line argument of
   `01:00:00` to the Python object `datetime.timedelta(0, 3600))`.
 
+- `json_action(**kwargs)`
+
+  Maps command-line arguments to JSON objects.
+  Only accepts valid JSON.
+  Passes `kwargs` on to `json.loads`.
+
+  eg. An action of `json_action()` would map a command-line argument of
+  `{"a": 1, "b": 2}` to the Python object `{"a": 1, "b": 2}`.
+
 - `mapping_action(possible_values)`
 
   Takes a dictionary whose keys are the allowed values,
