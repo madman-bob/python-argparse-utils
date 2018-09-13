@@ -117,3 +117,13 @@ instead of any string value.
   ```
 
   would map a command-line argument of `red` to the enum `Colour.red` value.
+
+- `python_literal_action()`
+
+  Maps command-line arguments to Python literals.
+  Only accepts valid Python literal objects.
+
+  Similar to `json_action`, but also allows tuples, and complex numbers.
+
+  eg. An action of `python_literal_action()` would map a command-line argument of
+  `(1, 2)` to the Python object `(1, 2)`.
