@@ -127,3 +127,12 @@ instead of any string value.
 
   eg. An action of `python_literal_action()` would map a command-line argument of
   `(1, 2)` to the Python object `(1, 2)`.
+
+## Installation
+
+Install and update using the standard Python package manager
+[pip](https://pip.pypa.io/en/stable/):
+
+```bash
+pip install argparse-utils
+```
