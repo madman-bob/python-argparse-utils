@@ -1,4 +1,5 @@
 from argparse import ArgumentParser
+from collections import OrderedDict
 
 from argparse_utils.datetime import datetime_action, date_action, time_action, timedelta_action
 from argparse_utils.json import json_action
@@ -17,4 +18,4 @@ __all__ = [
 
 
 def enum_action(enum_class):
-    return mapping_action(enum_class.__members__)
+    return mapping_action(OrderedDict(enum_class.__members__))

@@ -1,4 +1,5 @@
 from argparse import ArgumentParser
+from collections import OrderedDict
 from contextlib import redirect_stderr
 from enum import Enum
 from io import StringIO
@@ -10,11 +11,11 @@ from argparse_utils import mapping_action, enum_action
 class TestMappingAction(TestCase):
     @property
     def options(self):
-        return {
-            'x': 1,
-            'y': 2,
-            'z': object()
-        }
+        return OrderedDict([
+            ('x', 1),
+            ('y', 2),
+            ('z', object()),
+        ])
 
     class Colours(Enum):
         red = 1
