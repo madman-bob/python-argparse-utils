@@ -49,3 +49,9 @@ class TestPythonLiteralAction(TestCase):
                     error_message.getvalue(),
                     re_escape("invalid Python literal: '{}'".format(invalid_python_literal))
                 )
+
+    def test_python_literal_action_help(self):
+        parser = ArgumentParser()
+        parser.add_argument('-a', action=python_literal_action())
+
+        self.assertRegex(parser.format_help(), "Python literal")

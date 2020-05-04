@@ -14,4 +14,8 @@ def json_action(**kwargs):
             except ValueError:
                 raise ArgumentTypeError("invalid json: '{}'".format(value))
 
+        @classmethod
+        def default_help(cls):
+            return "json literal"
+
     return JSONAction

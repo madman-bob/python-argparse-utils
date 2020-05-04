@@ -49,6 +49,9 @@ class StoreMappedAction(Action, metaclass=ABCMeta):
         if choices is None:
             choices = self.default_choices()
 
+        if help is None:
+            help = self.default_help()
+
         super().__init__(
             option_strings,
             dest,
@@ -64,6 +67,10 @@ class StoreMappedAction(Action, metaclass=ABCMeta):
 
     @classmethod
     def default_choices(cls):
+        return None
+
+    @classmethod
+    def default_help(cls):
         return None
 
     def mapping_function(self, value):

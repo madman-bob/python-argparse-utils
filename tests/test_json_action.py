@@ -41,3 +41,9 @@ class TestJSONAction(TestCase):
                     parser.parse_args(['-a', invalid_json])
 
                 self.assertRegex(error_message.getvalue(), "invalid json: '{}'".format(invalid_json))
+
+    def test_json_action_help(self):
+        parser = ArgumentParser()
+        parser.add_argument('-a', action=json_action())
+
+        self.assertRegex(parser.format_help(), "json literal")

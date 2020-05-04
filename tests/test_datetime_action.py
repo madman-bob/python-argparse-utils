@@ -42,6 +42,16 @@ class TestDatetimeAction(TestCase):
 
                 self.assertRegex(error_message.getvalue(), "invalid datetime: '{}'".format(invalid_datetime))
 
+    def test_datetime_action_help(self):
+        formats = ['%Y-%m-%dT%H:%M:%S', '%d/%m/%Y %H:%M:%S', '%m/%d/%Y %H:%M:%S', '%H %Y %S %m %d %M']
+
+        for fmt in formats:
+            with self.subTest(fmt=fmt):
+                parser = ArgumentParser()
+                parser.add_argument('-a', action=datetime_action(fmt))
+
+                self.assertRegex(parser.format_help(), r"-a A +datetime \(accepted format: {}\)".format(fmt))
+
     def test_basic_date_action(self):
         parser = ArgumentParser()
         parser.add_argument('-a', action=date_action())
@@ -76,6 +86,16 @@ class TestDatetimeAction(TestCase):
 
                 self.assertRegex(error_message.getvalue(), "invalid date: '{}'".format(invalid_date))
 
+    def test_date_action_help(self):
+        formats = ['%Y-%m-%d', '%d/%m/%Y', '%m/%d/%Y', '%m %Y %d']
+
+        for fmt in formats:
+            with self.subTest(fmt=fmt):
+                parser = ArgumentParser()
+                parser.add_argument('-a', action=date_action(fmt))
+
+                self.assertRegex(parser.format_help(), r"-a A +date \(accepted format: {}\)".format(fmt))
+
     def test_basic_time_action(self):
         parser = ArgumentParser()
         parser.add_argument('-a', action=time_action())
@@ -109,6 +129,16 @@ class TestDatetimeAction(TestCase):
                     parser.parse_args(['-a', invalid_time])
 
                 self.assertRegex(error_message.getvalue(), "invalid time: '{}'".format(invalid_time))
+
+    def test_time_action_help(self):
+        formats = ['%H:%M:%S', '%S %H %M']
+
+        for fmt in formats:
+            with self.subTest(fmt=fmt):
+                parser = ArgumentParser()
+                parser.add_argument('-a', action=time_action(fmt))
+
+                self.assertRegex(parser.format_help(), r"-a A +time \(accepted format: {}\)".format(fmt))
 
     def test_basic_timedelta_action(self):
         parser = ArgumentParser()
@@ -150,3 +180,13 @@ class TestDatetimeAction(TestCase):
                     parser.parse_args(['-a', invalid_timedelta])
 
                 self.assertRegex(error_message.getvalue(), "invalid timedelta: '{}'".format(invalid_timedelta))
+
+    def test_time_delta_action_help(self):
+        formats = ['%H', '%M', '%S', '%d', '%j', '%S %H %M', '%S %H %d %M']
+
+        for fmt in formats:
+            with self.subTest(fmt=fmt):
+                parser = ArgumentParser()
+                parser.add_argument('-a', action=timedelta_action(fmt))
+
+                self.assertRegex(parser.format_help(), r"-a A +timedelta \(accepted format: {}\)".format(fmt))

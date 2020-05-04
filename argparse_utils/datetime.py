@@ -14,6 +14,10 @@ def datetime_action(fmt='%Y-%m-%dT%H:%M:%S'):
             except ValueError:
                 raise ArgumentTypeError("invalid datetime: '{}' (accepted format: {})".format(value, fmt))
 
+        @classmethod
+        def default_help(cls):
+            return "datetime (accepted format: {})".format(fmt).replace('%', '%%')
+
     return StoreDateTimeAction
 
 
@@ -25,6 +29,10 @@ def date_action(fmt='%Y-%m-%d'):
             except ValueError:
                 raise ArgumentTypeError("invalid date: '{}' (accepted format: {})".format(value, fmt))
 
+        @classmethod
+        def default_help(cls):
+            return "date (accepted format: {})".format(fmt).replace('%', '%%')
+
     return StoreDateAction
 
 
@@ -35,6 +43,10 @@ def time_action(fmt='%H:%M:%S'):
                 return datetime.strptime(value, fmt).time()
             except ValueError:
                 raise ArgumentTypeError("invalid time: '{}' (accepted format: {})".format(value, fmt))
+
+        @classmethod
+        def default_help(cls):
+            return "time (accepted format: {})".format(fmt).replace('%', '%%')
 
     return StoreTimeAction
 
@@ -48,5 +60,9 @@ def timedelta_action(fmt='%H:%M:%S'):
                 return datetime.strptime(value, fmt) - start_datetime
             except ValueError:
                 raise ArgumentTypeError("invalid timedelta: '{}' (accepted format: {})".format(value, fmt))
+
+        @classmethod
+        def default_help(cls):
+            return "timedelta (accepted format: {})".format(fmt).replace('%', '%%')
 
     return StoreTimeDeltaAction

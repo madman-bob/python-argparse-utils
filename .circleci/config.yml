@@ -4,6 +4,9 @@ jobs:
     docker:
       - image: circleci/python:3.5
 
+    environment:
+      COLUMNS: 80 # Used for consistent width in parser stdout/stderr message tests
+
     steps:
       - checkout
 

@@ -14,4 +14,8 @@ def python_literal_action():
             except (SyntaxError, ValueError):
                 raise ArgumentTypeError("invalid Python literal: '{}'".format(value))
 
+        @classmethod
+        def default_help(cls):
+            return "Python literal"
+
     return PythonLiteralAction
