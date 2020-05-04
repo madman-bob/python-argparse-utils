@@ -1,0 +1,131 @@
+version: 2
+jobs:
+  test-python-3-5: &test-python-3-5
+    docker:
+      - image: circleci/python:3.5
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "requirements.txt" }}
+
+      - run:
+          name: install dependencies
+          command: |
+            python -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
+
+      - run:
+          name: run tests
+          command: |
+            . venv/bin/activate
+            python -m unittest discover
+
+  test-python-3-6:
+    <<: *test-python-3-5
+
+    docker:
+      - image: circleci/python:3.6
+
+  test-python-3-7:
+    <<: *test-python-3-5
+
+    docker:
+      - image: circleci/python:3.7
+
+  test-python-3-8:
+    <<: *test-python-3-5
+
+    docker:
+      - image: circleci/python:3.8
+
+  deploy:
+    docker:
+      - image: circleci/python:3.8
+
+    steps:
+      - checkout
+
+      - run:
+          name: Add twine to requirements.txt
+          command: |
+            echo "twine" >> requirements.txt
+
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "requirements.txt" }}
+
+      - run:
+          name: Install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
+
+      - run:
+          name: Verify module integrity
+          command: |
+            . venv/bin/activate
+            python pypi_upload/setup.py verify
+
+      - run:
+          name: Initialize .pypirc
+          command: |
+            cat > pypi_upload/.pypirc << EOF
+            [pypi]
+            username: ${PYPI_USERNAME}
+            password: ${PYPI_PASSWORD}
+            EOF
+
+      - run:
+          name: Deploy to PyPI
+          command: |
+            . venv/bin/activate
+            chmod +x pypi_upload/pypi_upload.sh
+            ./pypi_upload/pypi_upload.sh
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - test-python-3-5:
+          filters:
+            tags:
+              only: /.*/
+      - test-python-3-6:
+          filters:
+            tags:
+              only: /.*/
+      - test-python-3-7:
+          filters:
+            tags:
+              only: /.*/
+      - test-python-3-8:
+          filters:
+            tags:
+              only: /.*/
+      - deploy:
+          requires:
+            - test-python-3-5
+            - test-python-3-6
+            - test-python-3-7
+            - test-python-3-8
+          context: PyPI
+          filters:
+            tags:
+              only: /[0-9]+(\.[0-9]+)*/
+            branches:
+              ignore: /.*/
