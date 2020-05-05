@@ -6,7 +6,7 @@ from argparse_utils.json import json_action
 from argparse_utils.mapping import mapping_action
 from argparse_utils.python_literal import python_literal_action
 
-__version__ = "1.2.0"
+__version__ = "1.3.0"
 
 __all__ = [
     "ArgumentParser",
