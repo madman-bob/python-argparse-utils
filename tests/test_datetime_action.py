@@ -40,7 +40,10 @@ class TestDatetimeAction(TestCase):
                 with redirect_stderr(error_message), self.assertRaises(SystemExit):
                     parser.parse_args(['-a', invalid_datetime])
 
-                self.assertRegex(error_message.getvalue(), "invalid datetime: '{}'".format(invalid_datetime))
+                self.assertRegex(
+                    error_message.getvalue(),
+                    r"invalid datetime: '{}' \(accepted format: %Y-%m-%dT%H:%M:%S\)".format(invalid_datetime)
+                )
 
     def test_datetime_action_help(self):
         formats = ['%Y-%m-%dT%H:%M:%S', '%d/%m/%Y %H:%M:%S', '%m/%d/%Y %H:%M:%S', '%H %Y %S %m %d %M']
@@ -84,7 +87,10 @@ class TestDatetimeAction(TestCase):
                 with redirect_stderr(error_message), self.assertRaises(SystemExit):
                     parser.parse_args(['-a', invalid_date])
 
-                self.assertRegex(error_message.getvalue(), "invalid date: '{}'".format(invalid_date))
+                self.assertRegex(
+                    error_message.getvalue(),
+                    r"invalid date: '{}' \(accepted format: %Y-%m-%d\)".format(invalid_date)
+                )
 
     def test_date_action_help(self):
         formats = ['%Y-%m-%d', '%d/%m/%Y', '%m/%d/%Y', '%m %Y %d']
@@ -128,7 +134,10 @@ class TestDatetimeAction(TestCase):
                 with redirect_stderr(error_message), self.assertRaises(SystemExit):
                     parser.parse_args(['-a', invalid_time])
 
-                self.assertRegex(error_message.getvalue(), "invalid time: '{}'".format(invalid_time))
+                self.assertRegex(
+                    error_message.getvalue(),
+                    r"invalid time: '{}' \(accepted format: %H:%M:%S\)".format(invalid_time)
+                )
 
     def test_time_action_help(self):
         formats = ['%H:%M:%S', '%S %H %M']
@@ -179,7 +188,10 @@ class TestDatetimeAction(TestCase):
                 with redirect_stderr(error_message), self.assertRaises(SystemExit):
                     parser.parse_args(['-a', invalid_timedelta])
 
-                self.assertRegex(error_message.getvalue(), "invalid timedelta: '{}'".format(invalid_timedelta))
+                self.assertRegex(
+                    error_message.getvalue(),
+                    r"invalid timedelta: '{}' \(accepted format: %H:%M:%S\)".format(invalid_timedelta)
+                )
 
     def test_time_delta_action_help(self):
         formats = ['%H', '%M', '%S', '%d', '%j', '%S %H %M', '%S %H %d %M']
