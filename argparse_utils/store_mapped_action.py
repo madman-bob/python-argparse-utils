@@ -24,7 +24,7 @@ class Choice:
     def __hash__(self):
         return hash(self.value)
 
-    def __str__(self):
+    def __repr__(self):
         return self.name
 
 

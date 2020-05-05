@@ -55,7 +55,7 @@ class TestMappingAction(TestCase):
         with redirect_stderr(error_message), self.assertRaises(SystemExit):
             parser.parse_args('-a w'.split())
 
-        self.assertRegex(error_message.getvalue(), "invalid choice: 'w'")
+        self.assertRegex(error_message.getvalue(), r"invalid choice: 'w' \(choose from x, y, z\)")
 
     def test_mapping_action_help(self):
         parser = ArgumentParser()
@@ -88,7 +88,7 @@ class TestMappingAction(TestCase):
         with redirect_stderr(error_message), self.assertRaises(SystemExit):
             parser.parse_args('-a purple'.split())
 
-        self.assertRegex(error_message.getvalue(), "invalid choice: 'purple'")
+        self.assertRegex(error_message.getvalue(), r"invalid choice: 'purple' \(choose from red, green, blue\)")
 
     def test_enum_action_help(self):
         parser = ArgumentParser()
