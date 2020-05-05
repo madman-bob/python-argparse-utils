@@ -86,11 +86,14 @@ instead of any string value.
   eg. An action of `json_action()` would map a command-line argument of
   `{"a": 1, "b": 2}` to the Python object `{"a": 1, "b": 2}`.
 
-- `mapping_action(possible_values)`
+- `mapping_action(possible_values, key_normalizer=None)`
 
   Takes a dictionary whose keys are the allowed values,
   and maps those values to the values found in the dictionary.
   Only the values found as keys in the dictionary are allowed as command-line arguments.
+
+  `key_normalizer`, if given, allows variants of the keys,
+  by normalizing them before looking them up in the given mapping.
 
   eg. An action of
 
@@ -99,24 +102,31 @@ instead of any string value.
       'red': (255, 0, 0),
       'green': (0, 255, 0),
       'blue': (0, 0, 255)
-  })
+  }, str.lower)
   ```
 
   would map a command-line argument of `red` to the Python object `(255, 0, 0)`.
 
-- `enum_action(enum_class)`
+  Using `str.lower` as the `key_normalizer` makes the command-line argument case-insensitive.
+
+- `enum_action(enum_class, key_normalizer=None)`
 
   Takes an `Enum` class,
   and maps the string representation of the keys to the appropriate enum value.
   Only the values found in the enum are allowed as command-line arguments.
 
+  `key_normalizer`, if given, allows variants of the keys,
+  by normalizing them before looking them up in the given mapping.
+
   eg. Using the `Colour` enum, from the first example, an action of
 
   ```python
-  enum_action(Colour)
+  enum_action(Colour, str.lower)
   ```
 
   would map a command-line argument of `red` to the enum `Colour.red` value.
+
+  Using `str.lower` as the `key_normalizer` makes the command-line argument case-insensitive.
 
 - `python_literal_action()`
 

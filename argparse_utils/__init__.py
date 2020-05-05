@@ -17,5 +17,5 @@ __all__ = [
 ]
 
 
-def enum_action(enum_class):
-    return mapping_action(OrderedDict(enum_class.__members__))
+def enum_action(enum_class, key_normalizer=None):
+    return mapping_action(OrderedDict(enum_class.__members__), key_normalizer)

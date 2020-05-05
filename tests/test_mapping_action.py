@@ -63,6 +63,18 @@ class TestMappingAction(TestCase):
 
         self.assertRegex(parser.format_help(), r"-a \{x,y,z\}")
 
+    def test_mapping_action_key_normalizer(self):
+        parser = ArgumentParser()
+        parser.add_argument('-a', action=mapping_action(self.options, str.upper))
+
+        with self.subTest("Help message normalized"):
+            self.assertRegex(parser.format_help(), r"-a \{X,Y,Z\}")
+
+        with self.subTest("Arg normalized"):
+            args = parser.parse_args('-a X'.split())
+
+            self.assertEqual(args.a, 1)
+
     def test_basic_enum_action(self):
         parser = ArgumentParser()
         parser.add_argument('-a', action=enum_action(self.Colours))
@@ -95,3 +107,15 @@ class TestMappingAction(TestCase):
         parser.add_argument('-a', action=enum_action(self.Colours))
 
         self.assertRegex(parser.format_help(), r"-a \{red,green,blue\}")
+
+    def test_enum_action_key_normalizer(self):
+        parser = ArgumentParser()
+        parser.add_argument('-a', action=enum_action(self.Colours, str.upper))
+
+        with self.subTest("Help message normalized"):
+            self.assertRegex(parser.format_help(), r"-a \{RED,GREEN,BLUE\}")
+
+        with self.subTest("Arg normalized"):
+            args = parser.parse_args('-a GrEeN'.split())
+
+            self.assertEqual(args.a, self.Colours.green)

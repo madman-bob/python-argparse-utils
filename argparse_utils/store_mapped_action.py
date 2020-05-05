@@ -6,7 +6,7 @@ __all__ = ["StoreMappedAction", "Choice"]
 
 class Choice:
     """
-    Wrapper class for Action choices
+    Wrapper class for an Action choice
 
     Allows you to override the display name for a given Python object
     """
@@ -17,12 +17,6 @@ class Choice:
 
         self.name = name
         self.value = value
-
-    def __eq__(self, other):
-        return self.value == other
-
-    def __hash__(self):
-        return hash(self.value)
 
     def __repr__(self):
         return self.name
